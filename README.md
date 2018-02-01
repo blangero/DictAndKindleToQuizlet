@@ -1,2 +1,2 @@
-# FromDicAndKindleToQuizlet
-Get words from GoldenDic history and from Kindle, make card of them and import to Quizlet
+# DictAndKindleToQuizlet
+Get words from GoldenDict history and from Kindle, make card for the words and import to Quizlet
