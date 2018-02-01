@@ -2,11 +2,38 @@ import sys
 import time
 import logging
 import os
+import xml.etree.ElementTree as ET
+
 from watchdog.observers import Observer
 from watchdog.events import LoggingEventHandler
 
+class Config():
+
+
+    configfilepath =  ".//config.xml"
+    def __init__(self):
+        global filepath
+        global filepattern
+        if ( os.path.exists( self.configfilepath ) ):
+            try:
+                tree = ET.parse(self.configfilepath)
+                root = tree.getroot()
+            except:
+                print("config file not exist")
+            self.filepath = tree.find('goldendict').find('history').find('path')
+            self.filepattern = tree.find('goldendict').find('history').find('filepattern')
+    def get_path(self):
+        return self.filepath
+    
+    def get_filepattern(self):
+        return self.filepattern
+
 class MyHandler(LoggingEventHandler):
     patterns = ["*history*"]
+
+    #def set_patterns(self,string):
+    #    self.patterns.append(string)
+
     def process(self, event):
         """
         event.event_type
@@ -40,8 +67,10 @@ if __name__ == "__main__":
     path = 'C:\\Users\\I323320\\AppData\\Roaming\\GoldenDict\\'
    # path = sys.argv[1] if len(sys.argv) > 1 else '.'
     event_handler = MyHandler()
+    config = Config()
+    #event_handler.set_patterns(config.get_filepattern())
     observer = Observer()
-    observer.schedule(event_handler, path, recursive=True)
+    observer.schedule(event_handler, config.get_path(), recursive=True)
     observer.start()
     try:
         while True:
